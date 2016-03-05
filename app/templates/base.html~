@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Yannis Mentekidis - Blog</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/blog.min.css') }}" />
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/hilite.css') }}" />
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/custom.css') }}" />
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/jumbotron.css') }}" />
+    <link rel='shortcut icon' href="{{ url_for('static', filename='favicon.ico') }}" />
+    {% block extra_head %}{% endblock %}
+    <script src="{{ url_for('static', filename='js/jquery-1.11.0.min.js') }}" type="text/javascript"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    {% block extra_scripts %}{% endblock %}
+  </head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <ul class="nav navbar-nav">
+          <li><a class="navbar-nav" href="/blog/">My Blog</a></li>
+          <li><a class="navbar-nav" href="/about/">About Me</a></li>
+          </ul>
+          <ul class="nav navbar-nav">
+            {% if session.logged_in %}
+              <li><a href="{{ url_for('drafts') }}">Drafts</a></li>
+              <li><a href="{{ url_for('create') }}">Create Entry</a></li>
+              <li><a href="{{ url_for('logout') }}">Log out</a></li>
+            {% endif %}
+            {% block extra_header %}{% endblock %}
+          </ul>
+          {% block search_bar %}
+            <form action="{{ url_for('index') }}" class="navbar-default navbar-form navbar-right" id="search-form" method="get" role="search">
+              <div class="form-group">
+                <input class="form-control" name="q" placeholder="Search For Posts" type="text" value="{% if search %}{{ search }}{% endif %}">
+              </div>
+            </form>
+          {% endblock %}
+        </div>
+      </div>
+    </nav>
+
+
+    <div class="container">
+      {% for category, message in get_flashed_messages(with_categories=true) %}
+        <div class="alert alert-{{ category }} alert-dismissable">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+          <p>{{ message }}</p>
+        </div>
+      {% endfor %}
+
+      {% block page_header %}
+        <div class="page-header">
+          <h1>{% block content_title %}{% endblock %}</h1>
+        </div>
+      {% endblock %}
+
+      {% block content %}{% endblock %}
+
+      <footer>
+        <hr />
+        <p>Created by Yannis Mentekidis, 2016. <a href="{{ url_for('login') }}">Log In</a></p>
+      </footer>
+    </div> <!-- Container -->
+  </body>
+</html>
